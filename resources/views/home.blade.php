@@ -45,7 +45,7 @@
 
 <!-- HERO -->
 <div style="
-    background:url('/images/brownies1.jpg') center/cover;
+    background:url('/images/banner.png') center/cover;
     height:400px;
     display:flex;
     align-items:center;
@@ -200,7 +200,7 @@
                 Temukan varian favoritmu sekarang
             </p>
 
-            <a href="/products" style="
+            <a href="/views/products" style="
                 background:#6b3e26;
                 color:white;
                 padding:12px 30px;
