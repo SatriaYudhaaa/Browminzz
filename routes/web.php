@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TestimoniController;
 use App\Http\Controllers\UserProductController;
 
+
 Route::get('/', function () {
     $products = Product::take(5)->get();
     return view('home', compact('products'));
@@ -27,6 +28,7 @@ Route::get('/', [HomeController::class, 'index']);
 Route::resource('/admin/testimoni', TestimoniController::class);
 Route::post('/admin/products/{id}/favorite', [ProductController::class, 'toggleFavorite']);
 Route::get('/products/{id}', [App\Http\Controllers\UserProductController::class, 'show']);
-
+Route::get('/admin/favorites', [ProductController::class, 'favorites']);
+Route::post('/admin/favorites/{id}', [ProductController::class, 'toggleFavorite']);
 
 

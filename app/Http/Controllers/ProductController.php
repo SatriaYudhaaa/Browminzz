@@ -58,8 +58,10 @@ class ProductController extends Controller
 
         $data = [
             'name' => $request->name,
-            'description' => $request->description,
+            'description' => $request->description ?? '-', // 🔥 ini fixnya
+            'detail' => $request->detail,
             'price' => $request->price,
+            'stock' => $request->stock,
         ];
 
         if ($request->hasFile('image')) {
@@ -95,8 +97,11 @@ class ProductController extends Controller
     }
     public function show($id)
     {
+        $product = Product::findOrFail($id);
+        return view('admin.products.show', compact('product'));
 
     }
+    
     public function toggleFavorite(Request $request, $id)
     {
         $product = Product::find($id);

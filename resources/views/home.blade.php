@@ -32,13 +32,6 @@
         Menu
         </a>
 
-        <a href="/cart" 
-        style="text-decoration:none; color:black; transition:0.3s;"
-        onmouseover="this.style.color='#6b3e26'"
-        onmouseout="this.style.color='black'">
-        Keranjang
-        </a>
-
     </div>
 
 </div>
