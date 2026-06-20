@@ -1,101 +1,239 @@
 @php use Illuminate\Support\Str; @endphp
 
-<h1 style="
-    text-align:center; 
-    margin-bottom:10px;
-    font-size:32px;
+<body style="
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#f5f5f5;
 ">
-    Browminzz Menu
-</h1>
 
-<p style="
-    text-align:center;
-    color:#777;
-    margin-bottom:40px;
+<!-- NAVBAR -->
+<div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 50px;
+    background:white;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+    position:sticky;
+    top:0;
+    z-index:100;
 ">
-    Pilihan brownies premium favorit untuk kamu 
-</p>
 
+    <h2 style="margin:0; color:#6b3e26;">Browminzz</h2>
+
+    <div style="display:flex; align-items:center; gap:20px;">
+
+        <a href="/" style="
+            text-decoration:none;
+            {{ request()->is('/') ? 'color:#6b3e26; font-weight:bold; border-bottom:2px solid #6b3e26;' : 'color:#333;' }}
+        ">Home</a>
+
+        <a href="/products" style="
+            text-decoration:none;
+            {{ request()->is('products') ? 'color:#6b3e26; font-weight:bold; border-bottom:2px solid #6b3e26;' : 'color:#333;' }}
+        ">Menu</a>
+
+        @php
+            $cart = session('cart', []);
+            $totalQty = 0;
+            foreach($cart as $item){
+                $totalQty += $item['qty'];
+            }
+        @endphp
+
+        <a href="/cart" style="
+            background:#6b3e26;
+            color:white;
+            padding:8px 15px;
+            border-radius:8px;
+            text-decoration:none;
+            font-weight:bold;
+        ">
+            🛒 Cart (<span id="cart-count">{{ $totalQty }}</span>)
+        </a>
+
+    </div>
+</div>
+
+<!-- NOTIF -->
+<div id="notif" style="
+    position:fixed;
+    top:80px;
+    right:20px;
+    background:#2ecc71;
+    color:white;
+    padding:12px 20px;
+    border-radius:8px;
+    display:none;
+    z-index:999;
+"></div>
+
+<!-- CONTAINER -->
 <div style="
     background:#f9f6f3;
     padding:40px 20px;
     border-radius:20px;
+    max-width:1200px;
+    margin:auto;
 ">
 
 <div style="
     display:grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap:25px;
-    max-width:1200px;
-    margin:auto;
 ">
 
 @foreach($products as $p)
 
-    <div style="
-        width:260px;
-        background:white;
-        padding:15px;
-        border-radius:15px;
-        box-shadow:0 10px 25px rgba(0,0,0,0.08);
-        text-align:center;
-        transition:0.3s;
-        position:relative;
-    " 
-    onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.15)'" 
-    onmouseout="this.style.transform='none'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.08)'">
+@php
+    $cart = session('cart', []);
+    $qty = isset($cart[$p->id]) ? $cart[$p->id]['qty'] : 0;
+@endphp
 
-        {{-- GAMBAR --}}
-        <img src="{{ asset('images/'.$p->image) }}" style="
-            width:100%;
-            height:160px;
-            object-fit:cover;
-            border-radius:10px;
-        ">
+<div style="
+    background:white;
+    padding:15px;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+    text-align:center;
+">
 
-        {{-- NAMA --}}
-        <h3 style="margin:10px 0 5px 0;">
-            {{ $p->name }}
-        </h3>
+<img src="{{ asset('images/'.$p->image) }}" style="
+    width:100%;
+    height:160px;
+    object-fit:cover;
+    border-radius:10px;
+">
 
-        {{-- DESKRIPSI --}}
-        <p style="
-            font-size:14px; 
-            color:#666;
-            min-height:40px;
-        ">
-            {{ Str::limit($p->description, 60) }}
-        </p>
+<h3>{{ $p->name }}</h3>
 
-        {{-- HARGA --}}
-        <div style="
-            font-size:16px;
-            font-weight:bold;
-            color:#6b3e26;
-            margin:8px 0;
-        ">
-            Rp {{ number_format($p->price, 0, ',', '.') }}
-        </div>
+<p style="color:#666;">
+    {{ Str::limit($p->description, 60) }}
+</p>
 
-        {{-- BUTTON --}}
-        <a href="/products/{{ $p->id }}" style="
-            background:#6b3e26;
-            color:white;
-            padding:10px 18px;
-            border-radius:8px;
-            text-decoration:none;
-            display:inline-block;
-            transition:0.2s;
-        "
-        onmouseover="this.style.background='#4e2d1c'"
-        onmouseout="this.style.background='#6b3e26'"
-        >
-            Lihat Detail →
-        </a>
+<b style="color:#6b3e26;">
+    Rp {{ number_format($p->price, 0, ',', '.') }}
+</b>
 
-    </div>
+<div style="margin-top:10px;">
+
+<a href="/products/{{ $p->id }}" style="
+    display:block;
+    background:#6b3e26;
+    color:white;
+    padding:8px;
+    border-radius:8px;
+    text-decoration:none;
+    margin-bottom:8px;
+">
+    Lihat Detail
+</a>
+
+@if($qty > 0)
+
+<div style="display:flex; justify-content:center; gap:10px; align-items:center;">
+
+<button type="button" onclick="decreaseCart({{ $p->id }})" style="
+    background:#e74c3c;
+    color:white;
+    padding:5px 12px;
+    border-radius:5px;
+    border:none;
+    cursor:pointer;
+">-</button>
+
+<span id="qty-{{ $p->id }}" style="font-weight:bold;">
+    {{ $qty }}
+</span>
+
+<button type="button" onclick="addToCart({{ $p->id }})" style="
+    background:#2ecc71;
+    color:white;
+    padding:5px 12px;
+    border-radius:5px;
+    border:none;
+    cursor:pointer;
+">+</button>
+
+</div>
+
+@else
+
+<button type="button" onclick="addToCart({{ $p->id }})" style="
+    background:#2ecc71;
+    color:white;
+    padding:8px 15px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+    font-weight:bold;
+">
+    + Keranjang
+</button>
+
+@endif
+
+</div>
+
+</div>
 
 @endforeach
 
 </div>
 </div>
+
+<!-- SCRIPT -->
+<script>
+function addToCart(id){
+    fetch('/cart/add/' + id)
+    .then(res => res.text())
+    .then(() => {
+        updateQty(id, 1);
+        updateCartCount(1);
+        showNotif("Ditambahkan ke keranjang");
+    });
+}
+
+function decreaseCart(id){
+    fetch('/cart/decrease/' + id)
+    .then(res => res.text())
+    .then(() => {
+        updateQty(id, -1);
+        updateCartCount(-1);
+    });
+}
+
+function updateQty(id, change){
+    let el = document.getElementById('qty-'+id);
+
+    if(!el){
+        location.reload();
+        return;
+    }
+
+    let newQty = parseInt(el.innerText) + change;
+
+    if(newQty <= 0){
+        location.reload();
+    } else {
+        el.innerText = newQty;
+    }
+}
+
+function updateCartCount(change){
+    let el = document.getElementById('cart-count');
+    el.innerText = parseInt(el.innerText) + change;
+}
+
+function showNotif(text){
+    let notif = document.getElementById('notif');
+    notif.innerText = text;
+    notif.style.display = 'block';
+
+    setTimeout(() => {
+        notif.style.display = 'none';
+    }, 1500);
+}
+</script>
+
+</body>

@@ -13,28 +13,56 @@
     z-index:100;
 ">
 
-    <h2 style="margin:0; color:#6b3e26;">Browminzz</h2>
+    <!-- LOGO -->
+    <h2 style="margin:0; color:#6b3e26;">
+        Browminzz
+    </h2>
 
-    <!-- WRAPPER MENU -->
-    <div style="display:flex; gap:40px;">
+    <!-- MENU -->
+    <div style="display:flex; align-items:center;">
 
-        <a href="/" 
-        style="text-decoration:none; color:black; transition:0.3s;"
-        onmouseover="this.style.color='#6b3e26'"
-        onmouseout="this.style.color='black'">
-        Home
+        <a href="/" style="
+            margin-right:20px;
+            text-decoration:none;
+            color:#6b3e26;
+            font-weight:bold;
+            border-bottom:2px solid #6b3e26;
+        ">
+            Home
         </a>
 
-        <a href="/products" 
-        style="text-decoration:none; color:black; transition:0.3s;"
-        onmouseover="this.style.color='#6b3e26'"
-        onmouseout="this.style.color='black'">
-        Menu
+        <a href="/products" style="
+            margin-right:20px;
+            text-decoration:none;
+            color:#333;
+        ">
+            Menu
+        </a>
+
+        @php
+            $cart = session('cart', []);
+            $totalQty = 0;
+
+            foreach($cart as $item){
+                $totalQty += $item['qty'];
+            }
+        @endphp
+
+        <a href="/cart" style="
+            background:#6b3e26;
+            color:white;
+            padding:8px 15px;
+            border-radius:8px;
+            text-decoration:none;
+            font-weight:bold;
+        ">
+            🛒 Cart ({{ $totalQty }})
         </a>
 
     </div>
 
 </div>
+
 
 <!-- HERO -->
 <div style="
@@ -193,7 +221,7 @@
                 Temukan varian favoritmu sekarang
             </p>
 
-            <a href="/views/products" style="
+            <a href="/products" style="
                 background:#6b3e26;
                 color:white;
                 padding:12px 30px;

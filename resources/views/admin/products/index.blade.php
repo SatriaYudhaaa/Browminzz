@@ -1,6 +1,19 @@
 <h2>Kelola Produk</h2>
 
+<a href="/admin/products/create" style="
+    display:inline-block;
+    margin-bottom:15px;
+    background:#2ecc71;
+    color:white;
+    padding:10px 15px;
+    border-radius:6px;
+    text-decoration:none;
+">
+    + Tambah Produk
+</a>
+
 @foreach($products as $p)
+
 <div style="
     border:1px solid #ddd;
     padding:15px;
@@ -20,7 +33,7 @@
         Rp {{ number_format($p->price) }}
     </div>
 
-    <!-- CHECKBOX FAVORIT -->
+    <!-- FAVORIT -->
     <form action="/admin/products/{{ $p->id }}/favorite" method="POST">
         @csrf
 
@@ -32,9 +45,11 @@
         >
         Favorit
     </form>
-    
+
 </div>
-<div style="margin-top:10px;">
+
+<!-- ACTION (MASIH TERKAIT PRODUK DI ATAS) -->
+<div style="margin-top:-10px; margin-bottom:20px;">
 
     <a href="/admin/products/{{ $p->id }}/edit" style="
         background:#3498db;
@@ -52,18 +67,21 @@
         @csrf
         @method('DELETE')
 
-        <button type="submit" onclick="return confirm('Yakin mau hapus produk ini?')"="
-            background:#e74c3c;
-            color:white;
-            padding:6px 12px;
-            border:none;
-            border-radius:6px;
-            font-size:12px;
-            cursor:pointer;
-        ">
+        <button type="submit"
+            onclick="return confirm('Yakin mau hapus produk ini?')"
+            style="
+                background:#e74c3c;
+                color:white;
+                padding:6px 12px;
+                border:none;
+                border-radius:6px;
+                font-size:12px;
+                cursor:pointer;
+            ">
             Hapus
         </button>
     </form>
 
 </div>
+
 @endforeach

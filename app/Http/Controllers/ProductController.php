@@ -38,8 +38,10 @@ class ProductController extends Controller
 
         Product::create([
             'name' => $request->name,
-            'description' => $request->description,
+            'description' => $request->description ?? '-',
+            'detail' => $request->detail,
             'price' => $request->price,
+            'stock' => $request->stock ?? 0,
             'image' => $filename,
         ]);
 
@@ -48,20 +50,20 @@ class ProductController extends Controller
 
     public function edit($id)
     {
-        $product = Product::find($id);
+        $product = Product::findOrFail($id);
         return view('admin.products.edit', compact('product'));
     }
 
     public function update(Request $request, $id)
     {
-        $product = Product::find($id);
+        $product = Product::findOrFail($id);
 
         $data = [
             'name' => $request->name,
-            'description' => $request->description ?? '-', // 🔥 ini fixnya
+            'description' => $request->description ?? '-',
             'detail' => $request->detail,
             'price' => $request->price,
-            'stock' => $request->stock,
+            'stock' => $request->stock ?? 0,
         ];
 
         if ($request->hasFile('image')) {
@@ -85,7 +87,7 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
-        $product = Product::find($id);
+        $product = Product::findOrFail($id);
 
         if ($product->image && file_exists(public_path('images/'.$product->image))) {
             unlink(public_path('images/'.$product->image));
@@ -95,16 +97,16 @@ class ProductController extends Controller
 
         return redirect('/admin/products');
     }
+
     public function show($id)
     {
         $product = Product::findOrFail($id);
         return view('admin.products.show', compact('product'));
-
     }
-    
+
     public function toggleFavorite(Request $request, $id)
     {
-        $product = Product::find($id);
+        $product = Product::findOrFail($id);
 
         $product->is_favorite = $request->has('is_favorite');
         $product->save();

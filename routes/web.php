@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TestimoniController;
 use App\Http\Controllers\UserProductController;
+use App\Http\Controllers\CartController;
 
 
 Route::get('/', function () {
@@ -30,5 +31,10 @@ Route::post('/admin/products/{id}/favorite', [ProductController::class, 'toggleF
 Route::get('/products/{id}', [App\Http\Controllers\UserProductController::class, 'show']);
 Route::get('/admin/favorites', [ProductController::class, 'favorites']);
 Route::post('/admin/favorites/{id}', [ProductController::class, 'toggleFavorite']);
+Route::get('/cart/add/{id}', [App\Http\Controllers\CartController::class, 'add']);
+Route::get('/cart', [CartController::class, 'index']);  
+Route::get('/checkout', [CartController::class, 'checkout']);
+Route::post('/checkout', [CartController::class, 'processCheckout']);
+Route::get('/cart/decrease/{id}', [CartController::class, 'decrease']);
 
 

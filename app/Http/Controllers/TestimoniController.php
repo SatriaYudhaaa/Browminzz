@@ -23,6 +23,7 @@ class TestimoniController extends Controller
         $request->validate([
             'nama' => 'required',
             'isi' => 'required',
+            'rating' => 'required|integer|min:1|max:5',
             'foto' => 'required|image'
         ]);
 
@@ -43,6 +44,7 @@ class TestimoniController extends Controller
         Testimoni::create([
             'nama' => $request->nama,
             'isi' => $request->isi,
+            'rating' => $request->rating, // 🔥 FIX
             'foto' => $filename,
         ]);
 
@@ -51,17 +53,24 @@ class TestimoniController extends Controller
 
     public function edit($id)
     {
-        $testimoni = Testimoni::find($id);
+        $testimoni = Testimoni::findOrFail($id);
         return view('admin.testimoni.edit', compact('testimoni'));
     }
 
     public function update(Request $request, $id)
     {
-        $testimoni = Testimoni::find($id);
+        $testimoni = Testimoni::findOrFail($id);
+
+        $request->validate([
+            'nama' => 'required',
+            'isi' => 'required',
+            'rating' => 'required|integer|min:1|max:5',
+        ]);
 
         $data = [
             'nama' => $request->nama,
             'isi' => $request->isi,
+            'rating' => $request->rating, // 🔥 FIX
         ];
 
         if ($request->hasFile('foto')) {
@@ -72,7 +81,7 @@ class TestimoniController extends Controller
             }
 
             $ext = $request->file('foto')->getClientOriginalExtension();
-            $filename = 'ts' . str_pad($testimoni->id, 3, '0', STR_PAD_LEFT) . '.' . $ext;
+            $filename = 'ftesti' . str_pad($testimoni->id, 3, '0', STR_PAD_LEFT) . '.' . $ext;
 
             $request->file('foto')->move(public_path('images'), $filename);
 
@@ -86,7 +95,7 @@ class TestimoniController extends Controller
 
     public function destroy($id)
     {
-        $testimoni = Testimoni::find($id);
+        $testimoni = Testimoni::findOrFail($id);
 
         // hapus file juga
         if ($testimoni->foto && file_exists(public_path('images/'.$testimoni->foto))) {

@@ -1,11 +1,24 @@
-<h2>Detail Produk</h2>
+<div style="margin-top:20px;">
 
-<img src="{{ asset('images/'.$product->image) }}" width="200"><br><br>
+    <a href="/admin/products/{{ $product->id }}/edit" style="
+        background:#3498db;
+        color:white;
+        padding:12px 20px;
+        border-radius:10px;
+        text-decoration:none;
+        display:inline-block;
+        font-weight:bold;
+        margin-right:10px;
+    ">
+        ✏️ Edit Produk
+    </a>
 
-<b>{{ $product->name }}</b><br><br>
+    <a href="/admin/products" style="
+        text-decoration:none;
+        color:#6b3e26;
+        font-size:14px;
+    ">
+        ← Kembali ke Admin
+    </a>
 
-<p>{{ $product->detail ?? $product->description }}</p>
-
-<p>Rp {{ number_format($product->price) }}</p>
-
-<a href="/admin/products">← Kembali</a>
+</div>
