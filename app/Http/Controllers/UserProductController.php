@@ -15,7 +15,7 @@ class UserProductController extends Controller
 
     public function show($id)
     {
-        $product = \App\Models\Product::findOrFail($id);
+        $product = \App\Models\Products::findOrFail($id);
 
         return view('products.show', compact('product'));
     }

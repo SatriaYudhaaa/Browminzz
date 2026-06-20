@@ -7,18 +7,15 @@ use App\Models\Product;
 
 class CartController extends Controller
 {
-    public function add($id)
+    public function add(Request $request, $id)
     {
         $product = Product::findOrFail($id);
 
-        // ambil cart dari session
         $cart = session()->get('cart', []);
 
-        // kalau produk sudah ada → tambah qty
         if(isset($cart[$id])) {
             $cart[$id]['qty']++;
         } else {
-            // kalau belum ada → tambah baru
             $cart[$id] = [
                 "name" => $product->name,
                 "price" => $product->price,
@@ -27,8 +24,13 @@ class CartController extends Controller
             ];
         }
 
-        // simpan ke session
+
         session()->put('cart', $cart);
+
+        // 🔥 BEDAIN RESPONSE
+        if ($request->ajax()) {
+            return response()->json(['success' => true]);
+        }
 
         return back()->with('success', 'Produk masuk ke keranjang!');
     }
@@ -71,7 +73,7 @@ class CartController extends Controller
         // 🔥 REDIRECT KE WA
         return redirect("https://wa.me/6285846987881?text=".$pesan);
     }
-    public function decrease($id)
+    public function decrease(Request $request, $id)
     {
         $cart = session()->get('cart', []);
 
@@ -84,6 +86,10 @@ class CartController extends Controller
             }
 
             session()->put('cart', $cart);
+        }
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true]); // 🔥 INI PENTING
         }
 
         return back();

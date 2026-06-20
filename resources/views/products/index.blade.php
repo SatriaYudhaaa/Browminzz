@@ -133,7 +133,7 @@
 
 <div style="display:flex; justify-content:center; gap:10px; align-items:center;">
 
-<button type="button" onclick="decreaseCart({{ $p->id }})" style="
+<button type="button" onclick="decreaseCart({{ $p->id }}, this)" style="
     background:#e74c3c;
     color:white;
     padding:5px 12px;
@@ -146,7 +146,7 @@
     {{ $qty }}
 </span>
 
-<button type="button" onclick="addToCart({{ $p->id }})" style="
+<button type="button" onclick="addToCart({{ $p->id }}, this)" style="
     background:#2ecc71;
     color:white;
     padding:5px 12px;
@@ -159,7 +159,7 @@
 
 @else
 
-<button type="button" onclick="addToCart({{ $p->id }})" style="
+<button type="button" onclick="addToCart({{ $p->id }}, this)" style="
     background:#2ecc71;
     color:white;
     padding:8px 15px;
@@ -185,8 +185,13 @@
 <!-- SCRIPT -->
 <script>
 function addToCart(id){
-    fetch('/cart/add/' + id)
-    .then(res => res.text())
+    fetch('/cart/add/' + id, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
     .then(() => {
         updateQty(id, 1);
         updateCartCount(1);
@@ -195,8 +200,13 @@ function addToCart(id){
 }
 
 function decreaseCart(id){
-    fetch('/cart/decrease/' + id)
-    .then(res => res.text())
+    fetch('/cart/decrease/' + id, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
     .then(() => {
         updateQty(id, -1);
         updateCartCount(-1);
@@ -204,19 +214,23 @@ function decreaseCart(id){
 }
 
 function updateQty(id, change){
-    let el = document.getElementById('qty-'+id);
+    let qtyEl = document.getElementById('qty-'+id);
 
-    if(!el){
+    // 🔥 kalau belum ada (berarti masih tombol "+ Keranjang")
+    if(!qtyEl){
+        // reload ringan biar struktur blade kepake lagi
         location.reload();
         return;
     }
 
-    let newQty = parseInt(el.innerText) + change;
+    let current = parseInt(qtyEl.innerText);
+    let newQty = current + change;
 
     if(newQty <= 0){
+        // balik ke kondisi awal (biar blade yang handle)
         location.reload();
     } else {
-        el.innerText = newQty;
+        qtyEl.innerText = newQty;
     }
 }
 
