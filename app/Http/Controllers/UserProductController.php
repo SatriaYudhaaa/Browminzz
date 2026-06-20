@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace App\Http\Controllers;
 
@@ -15,9 +15,9 @@ class UserProductController extends Controller
 
     public function show($id)
     {
-        $product = \App\Models\Products::findOrFail($id);
+        // 🔥 FIX DI SINI (hapus "s")
+        $product = Product::findOrFail($id);
 
         return view('products.show', compact('product'));
     }
-
 }

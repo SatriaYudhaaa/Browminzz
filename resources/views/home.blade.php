@@ -1,68 +1,7 @@
 <body style="margin:0; font-family:Arial; background:#f5f5f5;">
 
 <!-- NAVBAR -->
-<div style="
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:20px 50px;
-    background:white;
-    box-shadow:0 2px 10px rgba(0,0,0,0.05);
-    position:sticky;
-    top:0;
-    z-index:100;
-">
-
-    <!-- LOGO -->
-    <h2 style="margin:0; color:#6b3e26;">
-        Browminzz
-    </h2>
-
-    <!-- MENU -->
-    <div style="display:flex; align-items:center;">
-
-        <a href="/" style="
-            margin-right:20px;
-            text-decoration:none;
-            color:#6b3e26;
-            font-weight:bold;
-            border-bottom:2px solid #6b3e26;
-        ">
-            Home
-        </a>
-
-        <a href="/products" style="
-            margin-right:20px;
-            text-decoration:none;
-            color:#333;
-        ">
-            Menu
-        </a>
-
-        @php
-            $cart = session('cart', []);
-            $totalQty = 0;
-
-            foreach($cart as $item){
-                $totalQty += $item['qty'];
-            }
-        @endphp
-
-        <a href="/cart" style="
-            background:#6b3e26;
-            color:white;
-            padding:8px 15px;
-            border-radius:8px;
-            text-decoration:none;
-            font-weight:bold;
-        ">
-            🛒 Cart ({{ $totalQty }})
-        </a>
-
-    </div>
-
-</div>
-
+@include('components.navbar')
 
 <!-- HERO -->
 <div style="

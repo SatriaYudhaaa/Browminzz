@@ -13,6 +13,6 @@ class Product extends Model
         'image',
         'stock',
         'is_favorite',
-        'detal'
+        'detail' 
     ];
 }

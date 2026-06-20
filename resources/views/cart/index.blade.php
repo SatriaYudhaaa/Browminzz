@@ -5,54 +5,7 @@
     background:#f5f5f5;
 ">
 
-<div style="
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:20px 50px;
-    background:white;
-    box-shadow:0 2px 10px rgba(0,0,0,0.05);
-    position:sticky;
-    top:0;
-    z-index:100;
-">
-
-    <h2 style="margin:0; color:#6b3e26;">Browminzz</h2>
-
-    <div style="display:flex; align-items:center; gap:20px;">
-
-        <a href="/" style="
-            text-decoration:none;
-            {{ request()->is('/') ? 'color:#6b3e26; font-weight:bold; border-bottom:2px solid #6b3e26;' : 'color:#333;' }}
-        ">Home</a>
-
-        <a href="/products" style="
-            text-decoration:none;
-            {{ request()->is('products') ? 'color:#6b3e26; font-weight:bold; border-bottom:2px solid #6b3e26;' : 'color:#333;' }}
-        ">Menu</a>
-
-        @php
-            $cart = session('cart', []);
-            $totalQty = 0;
-            foreach($cart as $item){
-                $totalQty += $item['qty'];
-            }
-        @endphp
-
-        <a href="/cart" style="
-            background:#6b3e26;
-            color:white;
-            padding:8px 15px;
-            border-radius:8px;
-            text-decoration:none;
-            font-weight:bold;
-        ">
-            🛒 Cart (<span id="cart-count">{{ $totalQty }}</span>)
-        </a>
-
-    </div>
-
-</div>
+@include('components.navbar')
 
 <h1 style="text-align:center; margin-bottom:30px;">
     Keranjang Belanja
@@ -181,7 +134,8 @@ function addCart(id, el){
     })
     .then(res => res.json())
     .then(() => {
-        safeUpdate(el, 1);
+        updateUI(el, 1);
+        updateCartCount(1);
     })
     .catch(err => console.log(err));
 }
@@ -192,45 +146,43 @@ function minusCart(id, el){
     })
     .then(res => res.json())
     .then(() => {
-        safeUpdate(el, -1);
+        updateUI(el, -1);
+        updateCartCount(-1);
     })
     .catch(err => console.log(err));
 }
 
-function safeUpdate(el, change){
-    try {
-        let itemBox = el.closest('div[style*="border:1px solid"]');
-        if(!itemBox) return;
+function updateUI(el, change){
+    // 🔥 FIX: target item lebih stabil
+    let itemBox = el.closest('div[style*="border:1px solid"]');
+    if(!itemBox) return;
 
-        let qtyEl = itemBox.querySelector('.qty');
-        let subtotalEl = itemBox.querySelector('.subtotal');
-        let priceEl = itemBox.querySelector('small');
+    let qtyEl = itemBox.querySelector('.qty');
+    let subtotalEl = itemBox.querySelector('.subtotal');
+    let priceEl = itemBox.querySelector('small');
 
-        if(!qtyEl || !subtotalEl || !priceEl) return;
+    if(!qtyEl || !subtotalEl || !priceEl) return;
 
-        let qty = parseInt(qtyEl.innerText) || 0;
-        let newQty = qty + change;
+    let qty = parseInt(qtyEl.innerText) || 0;
+    let newQty = qty + change;
 
-        let price = parseInt(priceEl.innerText.replace(/[^0-9]/g, '')) || 0;
+    let price = parseInt(priceEl.innerText.replace(/[^0-9]/g, '')) || 0;
 
-        // 🔥 HAPUS ITEM
-        if(newQty <= 0){
-            itemBox.remove();
-            updateTotal();
-            return;
-        }
-
-        // update qty
-        qtyEl.innerText = newQty;
-
-        // update subtotal
-        subtotalEl.innerText = "Rp " + formatRupiah(price * newQty);
-
+    // 🔥 HAPUS ITEM
+    if(newQty <= 0){
+        itemBox.remove();
         updateTotal();
-
-    } catch (err) {
-        console.log("ERROR UPDATE UI:", err);
+        checkEmptyCart(); // 🔥 WAJIB
+        return;
     }
+
+    // update qty
+    qtyEl.innerText = newQty;
+
+    // update subtotal
+    subtotalEl.innerText = "Rp " + formatRupiah(price * newQty);
+
+    updateTotal();
 }
 
 function updateTotal(){
@@ -244,6 +196,39 @@ function updateTotal(){
     let totalEl = document.getElementById('total');
     if(totalEl){
         totalEl.innerText = formatRupiah(total);
+    }
+}
+
+function updateCartCount(change){
+    let el = document.getElementById('cart-count');
+    if(el){
+        el.innerText = Math.max(0, parseInt(el.innerText) + change);
+    }
+}
+
+function checkEmptyCart(){
+    let subtotals = document.querySelectorAll('.subtotal');
+
+    // 🔥 kalau semua item habis
+    if(subtotals.length === 0){
+        let container = document.querySelector('div[style*="max-width:800px"]');
+
+        if(container){
+            container.innerHTML = `
+                <p style="text-align:center;">
+                    Keranjang kosong 😢<br><br>
+                    <a href="/products" style="
+                        background:#6b3e26;
+                        color:white;
+                        padding:10px 20px;
+                        border-radius:8px;
+                        text-decoration:none;
+                    ">
+                        Lihat Menu
+                    </a>
+                </p>
+            `;
+        }
     }
 }
 

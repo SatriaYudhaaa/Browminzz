@@ -23,6 +23,7 @@ Route::get('/', [HomeController::class, 'index']);
 Route::get('/products', [UserProductController::class, 'index']);
 Route::get('/products/{id}', [UserProductController::class, 'show']);
 
+
 /*
 |--------------------------------------------------------------------------
 | CART (🔥 FIX UTAMA DI SINI)
