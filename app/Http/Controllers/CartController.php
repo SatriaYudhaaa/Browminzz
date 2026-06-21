@@ -94,4 +94,15 @@ class CartController extends Controller
 
         return back();
     }
+    public function getCart()
+    {
+        $cart = session()->get('cart', []);
+
+        // 🔥 tambahin id ke setiap item
+        foreach ($cart as $id => $item) {
+            $cart[$id]['id'] = $id;
+        }
+
+        return response()->json($cart);
+    }
 }

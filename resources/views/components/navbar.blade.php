@@ -33,16 +33,17 @@
             }
         @endphp
 
-        <a href="/cart" style="
+        <button onclick="toggleCart()" style="
             background:#6b3e26;
             color:white;
             padding:8px 16px;
             border-radius:10px;
-            text-decoration:none;
+            border:none;
+            cursor:pointer;
             font-weight:600;
         ">
-            🛒 Cart ({{ $totalQty }})
-        </a>
+            🛒 Cart (<span id="cart-count">{{ $totalQty }}</span>)
+        </button>
 
     </div>
 </div>

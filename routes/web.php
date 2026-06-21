@@ -31,6 +31,7 @@ Route::get('/products/{id}', [UserProductController::class, 'show']);
 */
 Route::post('/cart/add/{id}', [CartController::class, 'add']);
 Route::post('/cart/decrease/{id}', [CartController::class, 'decrease']);
+Route::get('/cart/data', [CartController::class, 'getCart']);
 
 Route::get('/cart', [CartController::class, 'index']);
 Route::get('/checkout', [CartController::class, 'checkout']);

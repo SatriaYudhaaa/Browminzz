@@ -203,4 +203,254 @@ function showNotif(text){
 }
 </script>
 
+<div id="cartModal" style="
+    position:fixed;
+    top:0;
+    right:-400px;
+    width:350px;
+    height:100%;
+    background:white;
+    box-shadow:-5px 0 15px rgba(0,0,0,0.1);
+    padding:20px;
+    transition:0.3s;
+    z-index:999;
+
+    display:flex;
+    flex-direction:column;
+">
+
+    <!-- HEADER -->
+    <h3 style="margin:0;">
+        Keranjang 🛒 
+        <span onclick="toggleCart()" style="
+            float:right;
+            cursor:pointer;
+            font-size:20px;
+        ">✖</span>
+    </h3>
+
+    <!-- CONTENT (SCROLL AREA) -->
+    <div id="cartContent" style="
+        flex:1;
+        overflow-y:auto;
+        margin-top:10px;
+    ">
+    </div>
+
+    <!-- FOOTER (INI HARUS DI LUAR) -->
+    <div id="cartFooter" style="
+        border-top:1px solid #eee;
+        padding:15px;
+        background:white;
+        margin-bottom:10px;
+        border-radius:12px 12px 0 0;
+        box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+    ">
+
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+            <b>Total</b>
+            <b id="cartTotal">Rp 0</b>
+        </div>
+
+        <button onclick="openCheckout()" style="
+            width:100%;
+            background:#2ecc71;
+            color:white;
+            padding:10px;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight:bold;
+        ">
+            Checkout
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+let isOpen = false;
+
+// =====================
+// TOGGLE CART
+// =====================
+function toggleCart(){
+    let modal = document.getElementById('cartModal');
+
+    if(isOpen){
+        modal.style.right = '-400px';
+        isOpen = false;
+    } else {
+        modal.style.right = '0px';
+        isOpen = true;
+        loadCart();
+    }
+}
+
+// =====================
+// ADD / MINUS (POST FIX)
+// =====================
+function addModal(id){
+    fetch('/cart/add/' + id, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(res => res.json())
+    .then(() => {
+        loadCart();
+        updateCartCount(1);
+        syncProductQty(id, 1);
+    });
+}
+
+function minusModal(id){
+    fetch('/cart/decrease/' + id, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(res => res.json())
+    .then(() => {
+        loadCart();
+        updateCartCount(-1);
+        syncProductQty(id, -1);
+    });
+}
+
+// =====================
+// LOAD CART + TOTAL
+// =====================
+function loadCart(){
+    fetch('/cart/data')
+    .then(res => res.json())
+    .then(data => {
+
+        let container = document.getElementById('cartContent');
+        let totalEl = document.getElementById('cartTotal');
+
+        let total = 0;
+
+        if(Object.keys(data).length === 0){
+            container.innerHTML = "Cart kosong 😢";
+            totalEl.innerText = "Rp 0";
+            return;
+        }
+
+        let html = '';
+
+        Object.values(data).forEach(item => {
+
+            let subtotal = item.price * item.qty;
+            total += subtotal;
+
+            html += `
+                <div style="margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">
+                    
+                    <b>${item.name}</b><br>
+
+                    <div style="display:flex; align-items:center; gap:10px; margin-top:5px;">
+                        
+                        <button onclick="minusModal(${item.id})" style="
+                            background:#e74c3c;
+                            color:white;
+                            border:none;
+                            padding:3px 10px;
+                            border-radius:5px;
+                            cursor:pointer;
+                        ">-</button>
+
+                        <span>${item.qty}</span>
+
+                        <button onclick="addModal(${item.id})" style="
+                            background:#2ecc71;
+                            color:white;
+                            border:none;
+                            padding:3px 10px;
+                            border-radius:5px;
+                            cursor:pointer;
+                        ">+</button>
+
+                    </div>
+
+                    <span>
+                        Rp ${formatRupiah(subtotal)}
+                    </span>
+
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+        totalEl.innerText = "Rp " + formatRupiah(total);
+    });
+}
+
+// =====================
+// FORMAT
+// =====================
+function formatRupiah(angka){
+    return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+// =====================
+// SYNC KE CARD PRODUK
+// =====================
+function syncProductQty(id, change){
+    let qtyEl = document.getElementById('qty-' + id);
+    if(!qtyEl) return;
+
+    let current = parseInt(qtyEl.innerText) || 0;
+    let newQty = current + change;
+
+    if(newQty <= 0){
+        let container = qtyEl.parentElement.parentElement;
+
+        container.innerHTML = `
+            <button onclick="addToCart(${id})" style="
+                background:#2ecc71;
+                color:white;
+                padding:8px 15px;
+                border-radius:8px;
+                border:none;
+                cursor:pointer;
+                font-weight:bold;
+            ">
+                + Keranjang
+            </button>
+        `;
+    } else {
+        qtyEl.innerText = newQty;
+    }
+}
+
+// =====================
+// UPDATE CART COUNT
+// =====================
+function updateCartCount(change){
+    let el = document.getElementById('cart-count');
+    if(!el) return;
+
+    let current = parseInt(el.innerText) || 0;
+    el.innerText = current + change;
+}
+
+// =====================
+// CLOSE CLICK OUTSIDE
+// =====================
+document.addEventListener('click', function(e){
+    let modal = document.getElementById('cartModal');
+
+    if(isOpen && !modal.contains(e.target) && !e.target.closest('button')){
+        modal.style.right = '-400px';
+        isOpen = false;
+    }
+});
+</script>
+
 </body>
