@@ -1,3 +1,7 @@
+<body style="margin:0; font-family:Arial; background:#f5f5f5;">
+
+@include('components.navbar')
+
 <h1 style="text-align:center; margin-bottom:40px;">
     Detail Produk
 </h1>

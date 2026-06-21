@@ -203,21 +203,23 @@ function showNotif(text){
 }
 </script>
 
-<div id="cartModal" style="
-    position:fixed;
-    top:0;
-    right:-400px;
-    width:350px;
-    height:100%;
-    background:white;
-    box-shadow:-5px 0 15px rgba(0,0,0,0.1);
-    padding:20px;
-    transition:0.3s;
-    z-index:999;
+#buat keranjang
+    <div id="cartModal" style="
+        position:fixed;
+        top:0;
+        right:-400px;
+        width:350px;
+        height:100%;
+        background:white;
+        box-shadow:-5px 0 15px rgba(0,0,0,0.1);
+        padding:20px;
+        padding-bottom:50px; /* 🔥 INI PENTING */
+        transition:0.3s;
+        z-index:999;
 
-    display:flex;
-    flex-direction:column;
-">
+        display:flex;
+        flex-direction:column;
+    ">
 
     <!-- HEADER -->
     <h3 style="margin:0;">
@@ -236,14 +238,93 @@ function showNotif(text){
         margin-top:10px;
     ">
     </div>
+    <!-- CHECKOUT FORM (HIDDEN DULU) -->
+    <div id="checkoutContent" style="display:none; margin-top:10px;">
+
+        <div style="
+            background:white;
+            padding:25px;
+            border-radius:15px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.08);
+        ">
+
+            <h4 style="margin-bottom:15px;">Checkout</h4>
+
+            <!-- NAMA -->
+            <div style="margin-bottom:15px;">
+                <label style="font-weight:500;">Nama</label>
+                <input 
+                    type="text" 
+                    id="co_nama"
+                    placeholder="Masukkan nama kamu"
+                    style="
+                        width:100%;
+                        padding:10px;
+                        margin-top:5px;
+                        border-radius:8px;
+                        border:1px solid #ddd;
+                    "
+                >
+            </div>
+
+            <!-- NO HP -->
+            <div style="margin-bottom:20px;">
+                <label style="font-weight:500;">No HP</label>
+                <input 
+                    type="tel" 
+                    id="co_hp"
+                    inputmode="numeric"
+                    placeholder="628xxxxxxxxxx"
+                    maxlength="13"
+                    style="
+                        width:100%;
+                        padding:10px;
+                        margin-top:5px;
+                        border-radius:8px;
+                        border:1px solid #ddd;
+                    "
+                >
+            </div>
+
+            <!-- BUTTON -->
+            <button onclick="processCheckout()" style="
+                width:100%;
+                background:linear-gradient(135deg, #2ecc71, #27ae60);
+                color:white;
+                padding:12px;
+                border:none;
+                border-radius:10px;
+                font-weight:bold;
+                cursor:pointer;
+            ">
+                Kirim ke WhatsApp 🚀
+            </button>
+
+            <button onclick="backToCart()" style="
+                width:100%;
+                margin-top:10px;
+                background:#eee;
+                padding:10px;
+                border:none;
+                border-radius:8px;
+                cursor:pointer;
+            ">
+                ← Kembali
+            </button>
+
+        </div>
+
+    </div>
+
 
     <!-- FOOTER (INI HARUS DI LUAR) -->
     <div id="cartFooter" style="
         border-top:1px solid #eee;
         padding:15px;
         background:white;
-        margin-bottom:10px;
-        border-radius:12px 12px 0 0;
+
+        margin-bottom:15px; /* 🔥 NAIKIN */
+        border-radius:12px;
         box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
     ">
 
@@ -451,6 +532,81 @@ document.addEventListener('click', function(e){
         isOpen = false;
     }
 });
+
+function openCheckout(){
+    document.getElementById('cartContent').style.display = 'none';
+    document.getElementById('checkoutContent').style.display = 'block';
+
+    // 🔥 sembunyikan footer
+    document.getElementById('cartFooter').style.display = 'none';
+}
+
+function backToCart(){
+    document.getElementById('checkoutContent').style.display = 'none';
+    document.getElementById('cartContent').style.display = 'block';
+
+    // 🔥 munculin lagi footer
+    document.getElementById('cartFooter').style.display = 'block';
+}
+
+function processCheckout(){
+    let nama = document.getElementById('co_nama').value;
+    let hp = document.getElementById('co_hp').value;
+
+    if(!nama){
+        alert('Nama wajib diisi!');
+        return;
+    }
+
+    // 🔥 VALIDASI NOMOR INDONESIA
+    if(!/^628[0-9]{8,10}$/.test(hp)){
+        alert('Nomor harus format Indonesia (628xxxx)');
+        return;
+    }
+
+    fetch('/cart/data')
+    .then(res => res.json())
+    .then(data => {
+
+        let pesan = "Halo, saya ingin pesan:%0A";
+        let total = 0;
+
+        Object.values(data).forEach(item => {
+            let subtotal = item.price * item.qty;
+            total += subtotal;
+
+            pesan += `- ${item.name} x${item.qty} = Rp ${formatRupiah(subtotal)}%0A`;
+        });
+
+        pesan += `%0ATotal: Rp ${formatRupiah(total)}`;
+        pesan += `%0ANama: ${nama}`;
+        pesan += `%0ANo HP: ${hp}`;
+
+        window.location.href = "https://wa.me/6285846987881?text=" + pesan;
+    });
+}
+
+// VALIDASI INPUT NO HP (REALTIME)
+const inputHp = document.getElementById('co_hp');
+
+if(inputHp){
+    inputHp.addEventListener('input', function(e){
+        let val = e.target.value;
+
+        // hapus selain angka
+        val = val.replace(/[^0-9]/g, '');
+
+        // auto 08 → 628
+        if(val.startsWith('08')){
+            val = '628' + val.slice(2);
+        }
+
+        // max 13 digit
+        val = val.slice(0, 13);
+
+        e.target.value = val;
+    });
+}
 </script>
 
 </body>

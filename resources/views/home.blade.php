@@ -318,4 +318,5 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 2
     <p>© 2026 Browminzz - Brownies Premium</p>
 </div>
 
+@include('components.cart-modal')
 </body>
