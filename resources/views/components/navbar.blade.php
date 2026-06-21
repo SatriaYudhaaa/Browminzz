@@ -33,29 +33,17 @@
             }
         @endphp
 
-        <a id="cartBtn" href="javascript:void(0)" onclick="toggleCart()" style="
-            text-decoration:none;
-            font-weight:500;
-            position:relative;
-            color:#333;
+        <button onclick="toggleCart()" style="
+            background:#6b3e26;
+            color:white;
+            padding:8px 16px;
+            border-radius:10px;
+            border:none;
+            cursor:pointer;
+            font-weight:600;
         ">
-            Cart
-
-            @if($totalQty > 0)
-            <span id="cart-count" style="
-                position:absolute;
-                top:-8px;
-                right:-15px;
-                background:#e74c3c;
-                color:white;
-                font-size:11px;
-                padding:3px 6px;
-                border-radius:50%;
-            ">
-                {{ $totalQty }}
-            </span>
-            @endif
-        </a>
+            🛒 Cart (<span id="cart-count">{{ $totalQty }}</span>)
+        </button>
 
     </div>
 </div>
