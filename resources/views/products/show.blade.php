@@ -1,3 +1,11 @@
+<head>
+    <title>Browminzz</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 🔥 INI YANG KURANG -->
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+</head>
 <body style="margin:0; font-family:Arial; background:#f5f5f5;">
 
 @include('components.navbar')
@@ -7,87 +15,95 @@
 </h1>
 
 <div style="
-    max-width:1000px;
-    margin:auto;
+    max-width:900px;
+    margin:30px auto;
     display:flex;
-    gap:40px;
+    gap:30px;
     flex-wrap:wrap;
     align-items:flex-start;
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
 ">
 
     {{-- GAMBAR --}}
-    <div style="flex:1;">
+    <div style="flex:1; min-width:280px;">
         <img src="{{ asset('images/'.$product->image) }}" style="
             width:100%;
-            border-radius:15px;
-            box-shadow:0 10px 30px rgba(0,0,0,0.1);
+            border-radius:20px;
+            object-fit:cover;
         ">
     </div>
 
     {{-- INFO --}}
-    <div style="flex:1;">
+    <div style="flex:1; min-width:280px;">
 
-        <h2 style="font-size:30px; margin-bottom:10px;">
+        <h2 style="
+            font-size:26px;
+            margin-bottom:8px;
+            color:#222;
+        ">
             {{ $product->name }}
         </h2>
 
         <h3 style="
             color:#6b3e26;
-            font-size:22px;
+            font-size:24px;
             margin-bottom:15px;
+            font-weight:bold;
         ">
             Rp {{ number_format($product->price, 0, ',', '.') }}
         </h3>
 
         <p style="
-            color:#555;
-            line-height:1.7;
+            color:#666;
+            line-height:1.6;
             margin-bottom:20px;
+            font-size:14px;
         ">
             {{ $product->detail ?? $product->description }}
         </p>
 
-        {{-- INFO TAMBAHAN --}}
+        <!-- HIGHLIGHT -->
         <div style="
-            background:#f9f6f3;
+            background:#fff8f3;
             padding:15px;
-            border-radius:10px;
+            border-radius:12px;
             margin-bottom:20px;
-            font-size:14px;
+            font-size:13px;
             color:#444;
+            border:1px solid #f0e5dc;
         ">
-            <p>✔ Dibuat fresh setiap hari</p>
-            <p>✔ Tanpa bahan pengawet</p>
-            <p>✔ Menggunakan cokelat premium</p>
-            <p>✔ Cocok untuk hadiah & cemilan</p>
+            ✔ Fresh setiap hari <br>
+            ✔ Tanpa pengawet <br>
+            ✔ Cokelat premium <br>
+            ✔ Cocok untuk hadiah 🎁
         </div>
 
-        {{-- BUTTON --}}
+        <!-- BUTTON -->
         <a href="https://wa.me/6285846987881?text={{ urlencode('Halo, saya mau pesan '.$product->name.' seharga Rp '.number_format($product->price,0,',','.')) }}" 
-           target="_blank"
-           style="
+        target="_blank"
+        style="
+            display:block;
+            text-align:center;
             background:#25D366;
             color:white;
-            padding:14px 25px;
-            border-radius:10px;
+            padding:14px;
+            border-radius:12px;
             text-decoration:none;
-            display:inline-block;
             font-weight:bold;
             font-size:16px;
-            box-shadow:0 5px 15px rgba(0,0,0,0.1);
-        "
-        onmouseover="this.style.background='#1ebe5d'"
-        onmouseout="this.style.background='#25D366'"
-        >
+            margin-bottom:10px;
+            box-shadow:0 8px 20px rgba(0,0,0,0.1);
+        ">
             🛒 Pesan Sekarang
         </a>
-
-        <br><br>
 
         <a href="/products" style="
             text-decoration:none;
             color:#6b3e26;
-            font-size:14px;
+            font-size:13px;
         ">
             ← Kembali ke menu
         </a>
@@ -96,7 +112,7 @@
 
 </div>
 
-#buat keranjang
+<!-- keranjang -->
     <div id="cartModal" style="
         position:fixed;
         top:0;

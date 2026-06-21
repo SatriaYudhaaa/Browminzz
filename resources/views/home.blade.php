@@ -1,3 +1,11 @@
+<head>
+    <title>Browminzz</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+</head>
 <body style="margin:0; font-family:Arial; background:#f5f5f5;">
 
 <!-- NAVBAR -->
@@ -31,7 +39,6 @@
             Brownies Premium
         </h1>
 
-        <!-- ✅ TAMBAHAN INI -->
         <p style="font-size:18px;">
             Lembut, lumer, dan dibuat dengan bahan terbaik
         </p>
@@ -180,7 +187,6 @@
 
 </div>
 
-<!-- 🔥 TAMBAH DI SINI -->
 <!-- KENAPA PILIH -->
 <div style="
     padding:60px 20px;
@@ -318,7 +324,7 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 2
     <p>© 2026 Browminzz - Brownies Premium</p>
 </div>
 
-#buat keranjang
+<!-- keranjang -->
     <div id="cartModal" style="
         position:fixed;
         top:0;
@@ -328,7 +334,7 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 2
         background:white;
         box-shadow:-5px 0 15px rgba(0,0,0,0.1);
         padding:20px;
-        padding-bottom:50px; /* 🔥 INI PENTING */
+        padding-bottom:50px;
         transition:0.3s;
         z-index:999;
 
@@ -484,9 +490,7 @@ function toggleCart(){
     }
 }
 
-// =====================
 // ADD / MINUS (POST FIX)
-// =====================
 function addModal(id){
     fetch('/cart/add/' + id, {
         method: 'POST',
@@ -519,9 +523,7 @@ function minusModal(id){
     });
 }
 
-// =====================
 // LOAD CART + TOTAL
-// =====================
 function loadCart(){
     fetch('/cart/data')
     .then(res => res.json())
@@ -587,16 +589,12 @@ function loadCart(){
     });
 }
 
-// =====================
 // FORMAT
-// =====================
 function formatRupiah(angka){
     return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
-// =====================
 // SYNC KE CARD PRODUK
-// =====================
 function syncProductQty(id, change){
     let qtyEl = document.getElementById('qty-' + id);
     if(!qtyEl) return;
@@ -625,9 +623,7 @@ function syncProductQty(id, change){
     }
 }
 
-// =====================
 // UPDATE CART COUNT
-// =====================
 function updateCartCount(change){
     let el = document.getElementById('cart-count');
     if(!el) return;
@@ -636,9 +632,7 @@ function updateCartCount(change){
     el.innerText = current + change;
 }
 
-// =====================
 // CLOSE CLICK OUTSIDE
-// =====================
 document.addEventListener('click', function(e){
     let modal = document.getElementById('cartModal');
 
@@ -652,7 +646,6 @@ function openCheckout(){
     document.getElementById('cartContent').style.display = 'none';
     document.getElementById('checkoutContent').style.display = 'block';
 
-    // 🔥 sembunyikan footer
     document.getElementById('cartFooter').style.display = 'none';
 }
 
@@ -660,7 +653,6 @@ function backToCart(){
     document.getElementById('checkoutContent').style.display = 'none';
     document.getElementById('cartContent').style.display = 'block';
 
-    // 🔥 munculin lagi footer
     document.getElementById('cartFooter').style.display = 'block';
 }
 
@@ -673,7 +665,6 @@ function processCheckout(){
         return;
     }
 
-    // 🔥 VALIDASI NOMOR INDONESIA
     if(!/^628[0-9]{8,10}$/.test(hp)){
         alert('Nomor harus format Indonesia (628xxxx)');
         return;

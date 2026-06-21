@@ -1,5 +1,14 @@
 @php use Illuminate\Support\Str; @endphp
 
+<head>
+    <title>Browminzz</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 🔥 INI YANG KURANG -->
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+</head>
+
 <body style="
     margin:0;
     font-family: Arial, sans-serif;
@@ -203,7 +212,7 @@ function showNotif(text){
 }
 </script>
 
-#buat keranjang
+<!-- keranjang -->
     <div id="cartModal" style="
         position:fixed;
         top:0;

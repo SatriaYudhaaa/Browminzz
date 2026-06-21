@@ -2,9 +2,14 @@
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:20px 50px;
+    padding:15px 15px;
     background:white;
     box-shadow:0 2px 10px rgba(0,0,0,0.05);
+
+    position:sticky;
+    top:0;
+    z-index:999;
+    backdrop-filter: blur(10px);
 ">
 
     <!-- LOGO -->
