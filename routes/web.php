@@ -45,25 +45,41 @@ Route::get('/cart/decrease/{id}', [CartController::class, 'decrease']);;
 | ADMIN
 |--------------------------------------------------------------------------
 */
-// ✅ LOGIN (DI LUAR MIDDLEWARE)
+// ======================
+// ADMIN LOGIN
+// ======================
 Route::get('/admin/login', function () {
-    return view('auth.login');
-})->name('login');
+    return view('admin.login');
+});
 
 Route::post('/admin/login', function (Request $request) {
 
-    $credentials = $request->only('email', 'password');
+    if (Auth::attempt($request->only('email', 'password'))) {
 
-    if (Auth::attempt($credentials)) {
-        $request->session()->regenerate(); // 🔥 penting biar session aman
+        // 🔥 CEK ROLE ADMIN
+        if (auth()->user()->role !== 'admin') {
+            Auth::logout();
+            return back()->with('error', 'Bukan admin');
+        }
+
+        $request->session()->regenerate();
+
         return redirect('/admin');
     }
 
     return back()->with('error', 'Email atau password salah');
-})->name('login.post'); // 🔥 kasih nama biar rapi
+});
 
-Route::get('/admin/login', function () {
-    return view('admin.login');
+
+// ======================
+// ADMIN AREA
+// ======================
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+
+    Route::get('/', function () {
+        return view('admin.dashboard');
+    });
+
 });
 /*
 |--------------------------------------------------------------------------
