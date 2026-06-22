@@ -62,7 +62,9 @@ Route::post('/admin/login', function (Request $request) {
     return back()->with('error', 'Email atau password salah');
 })->name('login.post'); // 🔥 kasih nama biar rapi
 
-
+Route::get('/admin/login', function () {
+    return view('admin.login');
+});
 /*
 |--------------------------------------------------------------------------
 | ADMIN
