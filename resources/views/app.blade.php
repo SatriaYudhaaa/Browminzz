@@ -18,6 +18,12 @@
     </div>
 </nav>
 
+@if(session('error'))
+    <div style="color:red; text-align:center; margin:10px;">
+        {{ session('error') }}
+    </div>
+@endif
+
 <div class="container">
     @yield('content')
 </div>
