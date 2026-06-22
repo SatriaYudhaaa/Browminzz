@@ -27,7 +27,7 @@ class CartController extends Controller
 
         session()->put('cart', $cart);
 
-        // 🔥 BEDAIN RESPONSE
+        // BEDAIN RESPONSE
         if ($request->ajax()) {
             return response()->json(['success' => true]);
         }
@@ -67,10 +67,10 @@ class CartController extends Controller
 
         $pesan .= "%0ATotal: Rp ".number_format($total,0,',','.');
 
-        // 🔥 HAPUS CART SETELAH CHECKOUT
+        // HAPUS CART SETELAH CHECKOUT
         session()->forget('cart');
 
-        // 🔥 REDIRECT KE WA
+        // REDIRECT KE WA
         return redirect("https://wa.me/6285846987881?text=".$pesan);
     }
     public function decrease(Request $request, $id)
@@ -89,7 +89,7 @@ class CartController extends Controller
         }
 
         if ($request->ajax()) {
-            return response()->json(['success' => true]); // 🔥 INI PENTING
+            return response()->json(['success' => true]); 
         }
 
         return back();
@@ -98,7 +98,7 @@ class CartController extends Controller
     {
         $cart = session()->get('cart', []);
 
-        // 🔥 tambahin id ke setiap item
+        // tambahin id ke setiap item
         foreach ($cart as $id => $item) {
             $cart[$id]['id'] = $id;
         }

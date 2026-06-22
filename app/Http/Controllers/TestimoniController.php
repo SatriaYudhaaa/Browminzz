@@ -44,7 +44,7 @@ class TestimoniController extends Controller
         Testimoni::create([
             'nama' => $request->nama,
             'isi' => $request->isi,
-            'rating' => $request->rating, // 🔥 FIX
+            'rating' => $request->rating, 
             'foto' => $filename,
         ]);
 
@@ -70,7 +70,7 @@ class TestimoniController extends Controller
         $data = [
             'nama' => $request->nama,
             'isi' => $request->isi,
-            'rating' => $request->rating, // 🔥 FIX
+            'rating' => $request->rating, 
         ];
 
         if ($request->hasFile('foto')) {

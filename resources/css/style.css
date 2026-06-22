@@ -127,9 +127,7 @@ body {
     margin: 10px 0;
 }
 
-/* =========================
-   🔥 MOBILE RESPONSIVE
-========================= */
+/* MOBILE RESPONSIVE */
 @media (max-width:768px){
 
     .navbar-custom{

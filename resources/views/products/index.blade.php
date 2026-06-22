@@ -5,7 +5,6 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- 🔥 INI YANG KURANG -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 
@@ -178,7 +177,6 @@ function decreaseCart(id){
 function updateQty(id, change){
     let qtyEl = document.getElementById('qty-'+id);
 
-    // 🔥 kalau belum ada (berarti masih tombol "+ Keranjang")
     if(!qtyEl){
         // reload ringan biar struktur blade kepake lagi
         location.reload();
@@ -222,7 +220,7 @@ function showNotif(text){
         background:white;
         box-shadow:-5px 0 15px rgba(0,0,0,0.1);
         padding:20px;
-        padding-bottom:50px; /* 🔥 INI PENTING */
+        padding-bottom:50px;
         transition:0.3s;
         z-index:999;
 
@@ -332,7 +330,7 @@ function showNotif(text){
         padding:15px;
         background:white;
 
-        margin-bottom:15px; /* 🔥 NAIKIN */
+        margin-bottom:15px;
         border-radius:12px;
         box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
     ">
@@ -546,7 +544,7 @@ function openCheckout(){
     document.getElementById('cartContent').style.display = 'none';
     document.getElementById('checkoutContent').style.display = 'block';
 
-    // 🔥 sembunyikan footer
+    // sembunyikan footer
     document.getElementById('cartFooter').style.display = 'none';
 }
 
@@ -554,7 +552,7 @@ function backToCart(){
     document.getElementById('checkoutContent').style.display = 'none';
     document.getElementById('cartContent').style.display = 'block';
 
-    // 🔥 munculin lagi footer
+    // munculin lagi footer
     document.getElementById('cartFooter').style.display = 'block';
 }
 
@@ -567,7 +565,7 @@ function processCheckout(){
         return;
     }
 
-    // 🔥 VALIDASI NOMOR INDONESIA
+    //  VALIDASI NOMOR INDONESIA
     if(!/^628[0-9]{8,10}$/.test(hp)){
         alert('Nomor harus format Indonesia (628xxxx)');
         return;

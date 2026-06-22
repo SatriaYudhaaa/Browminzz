@@ -10,7 +10,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 🔥 USER ADMIN
+        //  USER ADMIN
         User::create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin'
         ]);
 
-        // 🔥 SEED PRODUK
+        // SEED PRODUK
         $this->call([
             ProductSeeder::class,
         ]);

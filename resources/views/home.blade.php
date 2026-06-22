@@ -444,7 +444,7 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 2
         padding:15px;
         background:white;
 
-        margin-bottom:15px; /* 🔥 NAIKIN */
+        margin-bottom:15px; 
         border-radius:12px;
         box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
     ">

@@ -153,7 +153,7 @@ function minusCart(id, el){
 }
 
 function updateUI(el, change){
-    // 🔥 FIX: target item lebih stabil
+    // target item lebih stabil
     let itemBox = el.closest('div[style*="border:1px solid"]');
     if(!itemBox) return;
 
@@ -168,11 +168,11 @@ function updateUI(el, change){
 
     let price = parseInt(priceEl.innerText.replace(/[^0-9]/g, '')) || 0;
 
-    // 🔥 HAPUS ITEM
+    // HAPUS ITEM
     if(newQty <= 0){
         itemBox.remove();
         updateTotal();
-        checkEmptyCart(); // 🔥 WAJIB
+        checkEmptyCart(); 
         return;
     }
 
@@ -209,7 +209,7 @@ function updateCartCount(change){
 function checkEmptyCart(){
     let subtotals = document.querySelectorAll('.subtotal');
 
-    // 🔥 kalau semua item habis
+    // kalau semua item habis
     if(subtotals.length === 0){
         let container = document.querySelector('div[style*="max-width:800px"]');
 

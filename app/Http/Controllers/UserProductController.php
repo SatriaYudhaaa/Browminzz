@@ -15,7 +15,7 @@ class UserProductController extends Controller
 
     public function show($id)
     {
-        // 🔥 FIX DI SINI (hapus "s")
+        
         $product = Product::findOrFail($id);
 
         return view('products.show', compact('product'));

@@ -28,7 +28,7 @@ Route::get('/products/{id}', [UserProductController::class, 'show']);
 
 /*
 |--------------------------------------------------------------------------
-| CART (🔥 FIX UTAMA DI SINI)
+| CART (FIX UTAMA DI SINI)
 |--------------------------------------------------------------------------
 */
 Route::post('/cart/add/{id}', [CartController::class, 'add']);
@@ -56,7 +56,7 @@ Route::post('/admin/login', function (Request $request) {
 
     if (Auth::attempt($request->only('email', 'password'))) {
 
-        // 🔥 CEK ROLE ADMIN
+        // CEK ROLE ADMIN
         if (auth()->user()->role !== 'admin') {
             Auth::logout();
             return back()->with('error', 'Bukan admin');
